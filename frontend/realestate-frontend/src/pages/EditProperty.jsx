@@ -25,7 +25,6 @@ const EditProperty = () => {
           type: data.type
         });
         if (data.imageUrls && data.imageUrls[0]) {
-          // 🚀 Add a timestamp (?t=...) to force the browser to refresh the image
           setPreview(`https://localhost:7185${data.imageUrls[0]}?t=${new Date().getTime()}`);
         }
       })
@@ -41,10 +40,8 @@ const EditProperty = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      // 1. Update text fields (No Area field here anymore)
       await axiosInstance.put(`/properties/${id}`, property);
 
-      // 2. If a NEW image was selected, upload it
       if (selectedFile) {
         const formData = new FormData();
         formData.append("File", selectedFile);
@@ -56,58 +53,86 @@ const EditProperty = () => {
       }
 
       alert("Updated successfully!");
-      // 🚀 Force a clean navigation so the Home page fetches fresh data
       navigate("/my-properties", { replace: true });
     } catch (err) {
-      alert("Update failed. Check if you are the owner.",err);
+      alert("Update failed. Check if you are the owner.", err);
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto my-10 p-8 bg-white rounded-2xl shadow-xl">
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">Edit Listing</h2>
-      <form onSubmit={handleUpdate} className="space-y-5">
-        
-        <input 
-          type="text" value={property.title} placeholder="Title"
-          className="w-full border p-3 rounded-lg"
-          onChange={(e) => setProperty({...property, title: e.target.value})}
-        />
+    <div className="max-w-2xl mx-auto my-6 sm:my-10 px-4">
+      <div className="p-6 sm:p-8 bg-white rounded-2xl shadow-xl">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800">
+          Edit Listing
+        </h2>
 
-        <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleUpdate} className="space-y-5">
+
           <input 
-            type="number" value={property.price} placeholder="Price"
-            className="w-full border p-3 rounded-lg"
-            onChange={(e) => setProperty({...property, price: e.target.value})}
+            type="text" 
+            value={property.title} 
+            placeholder="Title"
+            className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={(e) => setProperty({...property, title: e.target.value})}
           />
-          <select 
-            value={property.type} className="w-full border p-3 rounded-lg"
-            onChange={(e) => setProperty({...property, type: e.target.value})}
+
+          {/* Responsive Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input 
+              type="number" 
+              value={property.price} 
+              placeholder="Price"
+              className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => setProperty({...property, price: e.target.value})}
+            />
+            <select 
+              value={property.type} 
+              className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => setProperty({...property, type: e.target.value})}
+            >
+              <option value="House">House</option>
+              <option value="Apartment">Apartment</option>
+              <option value="Commercial">Commercial</option>
+            </select>
+          </div>
+
+          <textarea 
+            value={property.description} 
+            rows="4" 
+            placeholder="Description"
+            className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            onChange={(e) => setProperty({...property, description: e.target.value})}
+          />
+
+          <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
+            <label className="block text-sm font-bold text-gray-700 mb-3">
+              Add New Image
+            </label>
+
+            {preview && (
+              <img 
+                src={preview} 
+                alt="Current" 
+                className="w-full h-40 sm:h-48 object-cover rounded-lg mb-3"
+              />
+            )}
+
+            <input 
+              type="file" 
+              onChange={handleFileChange}
+              className="w-full text-sm"
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            className="w-full bg-blue-600 text-white py-3 sm:py-4 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition"
           >
-            <option value="House">House</option>
-            <option value="Apartment">Apartment</option>
-            <option value="Commercial">Commercial</option>
-          </select>
-        </div>
+            Save Changes
+          </button>
 
-        <textarea 
-          value={property.description} rows="4" placeholder="Description"
-          className="w-full border p-3 rounded-lg"
-          onChange={(e) => setProperty({...property, description: e.target.value})}
-        />
-
-        <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-          <label className="block text-sm font-bold text-gray-700 mb-3">Adding New Image</label>
-          {preview && (
-            <img src={preview} alt="Current" className="w-full h-48 object-cover rounded-lg mb-3" />
-          )}
-          <input type="file" onChange={handleFileChange} />
-        </div>
-
-        <button type="submit" className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold shadow-lg hover:bg-blue-700">
-          Save Changes
-        </button>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

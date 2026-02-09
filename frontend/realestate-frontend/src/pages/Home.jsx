@@ -52,8 +52,8 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div
-        className="relative h-[600px] flex items-center justify-center bg-cover bg-center"
+     <div
+        className="relative h-[420px] sm:h-[500px] md:h-[600px] flex items-center justify-center bg-cover bg-center"
         style={{
           backgroundImage: `url('https://plus.unsplash.com/premium_photo-1683120769541-a8847ff686bf?w=500&auto=format&fit=crop&q=60')`,
         }}
@@ -61,19 +61,19 @@ const Home = () => {
         <div className="absolute inset-0 bg-black/50"></div>
 
         <div className="relative z-10 text-center text-white px-4 w-full">
-          <h1 className="text-5xl md:text-6xl font-black mb-4">
+         <h1 className="text-3xl sm:text-4xl md:text-6xl font-black mb-4 leading-tight">
             Find Your Dream Home
           </h1>
-          <p className="text-xl mb-12 opacity-90">
+         <p className="text-base sm:text-lg md:text-xl mb-8 md:mb-12 opacity-90">
             Verified listings in Islamabad's most premium sectors.
           </p>
 
           {/* Search Bar */}
           <form
             onSubmit={handleSearch}
-            className="bg-white p-2 md:p-4 rounded-2xl shadow-2xl max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 items-center"
+           className="bg-white p-3 sm:p-4 rounded-2xl shadow-2xl max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-center"
           >
-            <div className="px-2 border-r border-gray-100">
+            <div className="px-2 md:border-r border-gray-100">
               <label className="block text-[10px] font-black text-blue-600 uppercase text-left ml-1">
                 Location / Title
               </label>
@@ -125,7 +125,7 @@ const Home = () => {
 
             <button
               type="submit"
-              className="bg-blue-600 text-white py-4 px-8 rounded-xl font-black hover:bg-blue-700 transition-all shadow-lg"
+             className="bg-blue-600 text-white py-3 sm:py-4 px-6 sm:px-8 rounded-xl font-black hover:bg-blue-700 transition-all shadow-lg w-full md:w-auto"
             >
               SEARCH
             </button>
@@ -153,7 +153,7 @@ const Home = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
               {properties.length > 0 ? (
                 properties.map((p) => (
                   <PropertyCard key={p.id} property={p} />
@@ -167,42 +167,44 @@ const Home = () => {
               )}
             </div>
 
-            {/* Pagination */}
-            {properties.length > 0 && (
-              <div className="flex justify-center items-center mt-16 gap-6">
-                <button
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((prev) => prev - 1)}
-                  className="px-6 py-3 bg-white border rounded-xl disabled:opacity-30 hover:shadow-md font-bold"
-                >
-                  ← Prev
-                </button>
+          {/* Pagination */}
+{properties.length > 0 && (
+  <div className="flex gap-2 flex-wrap justify-center mt-20"> {/* Added mt-10 for spacing */}
+    <button
+      disabled={currentPage === 1}
+      onClick={() => setCurrentPage((prev) => prev - 1)}
+      className="px-6 py-3 bg-white border cursor-pointer rounded-xl disabled:opacity-30 hover:shadow-md font-bold"
+    >
+      ← Prev
+    </button>
 
-                <div className="flex gap-2">
-                  {[...Array(totalPages)].map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setCurrentPage(i + 1)}
-                      className={`w-10 h-10 rounded-lg font-bold ${
-                        currentPage === i + 1
-                          ? "bg-blue-600 text-white"
-                          : "bg-white text-gray-400 hover:bg-gray-100"
-                      }`}
-                    >
-                      {i + 1}
-                    </button>
-                  ))}
-                </div>
+    <div className="flex gap-2 ">
+      {[...Array(totalPages)].map((_, i) => (
+        <button
+          key={i}
+          onClick={() => setCurrentPage(i + 1)}
+          className={`w-10 h-10 cursor-pointer rounded-lg font-bold ${
+            currentPage === i + 1
+              ? "bg-blue-600 text-white"
+              : "bg-white text-gray-400 hover:bg-gray-100"
+          }`}
+        >
+          {i + 1}
+        </button>
+      ))}
+    </div>
 
-                <button
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((prev) => prev + 1)}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-xl disabled:opacity-30 hover:bg-blue-700 font-bold"
-                >
-                  Next →
-                </button>
-              </div>
-            )}
+    <button
+      disabled={currentPage === totalPages}
+      onClick={() => setCurrentPage((prev) => prev + 1)}
+      className="px-6 py-3 bg-blue-600 text-white rounded-xl cursor-pointer disabled:opacity-30 hover:bg-blue-700 font-bold"
+    >
+      Next →
+    </button>
+  </div>
+)}
+
+          
           </>
         )}
       </div>
